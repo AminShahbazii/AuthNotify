@@ -1,0 +1,76 @@
+services:
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"    
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS:  ${RABBITMQ_PASS}
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlserver
+    ports:
+      - "14330:1433"
+    environment:
+       SA_PASSWORD: ${SQLSERVER_PASSWORD}
+       ACCEPT_EULA: "Y"
+    volumes:
+      - sql_data:/var/opt/mssql
+  
+  authentication:
+    container_name: Authentication
+    build:
+      context: ./Authentication-And-Usermanagement
+      dockerfile: ./AuthenticationApp/Dockerfile
+    ports:
+      - "7001:80"
+
+    depends_on: 
+    - rabbitmq
+    - sqlserver
+    - seq
+    environment:
+       ASPNETCORE_URLS: ${ASPNETCORE_URLS}
+       JWT__SignInKey: ${SIGNIN_KEY}
+       ConnectionStrings__DefaultConnection: ${CONNECTION_STRING_DEFAULT_CONNECTION}
+       RABBITMQ_HOST: rabbitmq
+       RABBITMQ_USER: ${RABBITMQ_USER}
+       RABBITMQ_PASS: ${RABBITMQ_PASS}
+
+
+  notification:
+    container_name: Notification
+    build:
+      context: ./NotificationService
+      dockerfile: ./NotificationService/Dockerfile
+    ports:
+      - "5001:80"
+    depends_on:
+      - rabbitmq
+      - seq
+    environment:
+        ASPNETCORE_URLS: ${ASPNETCORE_URLS}
+        RABBITMQ_HOST: rabbitmq
+        RABBITMQ_USER: ${RABBITMQ_USER}
+        RABBITMQ_PASS: ${RABBITMQ_PASS}
+        Email__Username: ${EMAIL_USER_NAME}
+        Email__Password: ${EMAIL_PASSWORD}
+        Email__From: ${EMAIL_FROM}
+
+  seq:
+    container_name: seq
+    image: datalust/seq:latest
+    ports:
+      - "5341:80"
+    environment:
+      ACCEPT_EULA: "Y"
+      SEQ_FIRSTRUN_ADMINPASSWORD: ${SEQ_FIRSTRUN_ADMINPASSWORD}
+    volumes:
+      - ./seq-data:/data
+    restart: unless-stopped
+
+volumes:
+  sql_data:
