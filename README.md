@@ -1,4 +1,4 @@
-# BetterAuthentication System
+# Authentication System
 
 A modular microservices system built with **ASP.NET Core**, consisting of:
 
