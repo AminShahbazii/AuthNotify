@@ -35,7 +35,7 @@ A modular microservices system built with **ASP.NET Core**, consisting of:
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/yourusername/AuthNotify.git
+git clone https://github.com/AminShahbazii/AuthNotify.git
 cd AuthNotify
 ```
 
