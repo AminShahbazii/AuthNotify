@@ -1,4 +1,4 @@
-# BetterAuthentication System
+# Authentication System
 
 A modular microservices system built with **ASP.NET Core**, consisting of:
 
@@ -35,8 +35,8 @@ A modular microservices system built with **ASP.NET Core**, consisting of:
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/yourusername/betterauthentication.git
-cd betterauthentication
+git clone https://github.com/AminShahbazii/AuthNotify.git
+cd AuthNotify
 ```
 
 2. Create a `.env` file in the root:
