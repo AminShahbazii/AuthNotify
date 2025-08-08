@@ -23,7 +23,7 @@ services:
   authentication:
     container_name: Authentication
     build:
-      context: ./Authentication-And-Usermanagement
+      context: ./AuthenticationAndUsermanagement
       dockerfile: ./AuthenticationApp/Dockerfile
     ports:
       - "7001:80"
